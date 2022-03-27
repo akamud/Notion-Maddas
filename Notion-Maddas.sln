@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notion-Madddas", "Notion-Madddas\Notion-Madddas.csproj", "{286B1DB4-4698-4DC7-B482-173DE830AD21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notion-Maddas", "Notion-Maddas\Notion-Maddas.csproj", "{286B1DB4-4698-4DC7-B482-173DE830AD21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
