@@ -11,5 +11,9 @@ public record ItemCardapio
     public Porção Porção { get; }
     public int Quantidade { get; private set; }
 
-    public void Incrementar() => Quantidade++;
+    public void Incrementar()
+    {
+        if (!Porção.Compartilhado)
+            Quantidade++;
+    }
 }
