@@ -1,5 +1,5 @@
 ﻿using Notion.Client;
-using NotionMadddas;
+using NotionMaddas;
 
 var client = NotionClientFactory.Create(new ClientOptions
 {
@@ -8,11 +8,12 @@ var client = NotionClientFactory.Create(new ClientOptions
 
 var páginas = await client.Databases.QueryAsync(Environment.GetEnvironmentVariable("DatabaseId"),
     new DatabasesQueryParameters());
+
 var itensCardápio = páginas.Results.SelectMany(x => x.Properties)
     .Where(x => x.Key == "Cardápio Letticia" || x.Key == "Cardapio Mud")
     .Select(x => x.Value).OfType<MultiSelectPropertyValue>()
     .SelectMany(value => value.MultiSelect)
-    .Select(x => new ItemCardápio(x.Name))
+    .Select(x => new Porção(x.Name))
     .ToList();
 
 Console.ReadLine();
