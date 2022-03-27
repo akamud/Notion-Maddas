@@ -14,7 +14,7 @@ ConsoleDebugger.Imprimir(cardápio);
 
 using var playwright = await Playwright.CreateAsync();
 await using var browser =
-    await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, SlowMo = 1_000 });
+    await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
 var context = await browser.NewContextAsync(new BrowserNewContextOptions { BaseURL = "https://maddas.com.br/" });
 var page = await context.NewPageAsync();
 page.SetDefaultTimeout(5_000);
@@ -23,6 +23,7 @@ await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true })
 
 try
 {
+    Console.WriteLine("É HORA DO SHOW");
     const string adicionarAoCarrinho = "text=Adicionar ao carrinho";
     foreach (var item in cardápio.Itens)
     {
@@ -47,5 +48,6 @@ finally
 {
     await context.Tracing.StopAsync(new TracingStopOptions { Path = "tracing.zip" });
 }
+Console.WriteLine("E POR HOJE É SÓ");
 
 Console.ReadLine();
