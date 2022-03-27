@@ -2,14 +2,20 @@
 using NotionMaddas.Dominio;
 using Spectre.Console;
 
+var databaseId = args[0].Split('=')[1];
+var tracing = false;
+if (args.Length > 1)
+    bool.TryParse(args[1].Split('=')?[1], out tracing);
+
 Cardápio? cardápio = null;
 await AnsiConsole.Progress()
-    .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new SpinnerColumn())
+    .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(), new SpinnerColumn())
     .StartAsync(async contexto =>
     {
-        var notionTask = contexto.AddTask("Obtendo dados do Notion").IsIndeterminate();
-        var porções = await NotionParser.ObterPorções();
-        notionTask.Increment(1);
+        var notionTask = contexto.AddTask($"{Emoji.Known.GlobeWithMeridians} Obtendo dados do Notion").IsIndeterminate();
+        var porções = await NotionParser.ObterPorções(databaseId);
+        notionTask.IsIndeterminate(false);
+        notionTask.Increment(100);
         notionTask.StopTask();
 
         cardápio = new Cardápio();
@@ -24,11 +30,5 @@ if (cardápio == null)
 
 ConsoleDebugger.Imprimir(cardápio);
 
-Console.WriteLine("É HORA DO SHOW");
-
 AutomatizadorCompra automatizadorCompra = new();
-await automatizadorCompra.ExecutarCompra(cardápio, false);
-
-Console.WriteLine("E POR HOJE É SÓ");
-
-Console.ReadLine();
+await automatizadorCompra.ExecutarCompra(cardápio, tracing);

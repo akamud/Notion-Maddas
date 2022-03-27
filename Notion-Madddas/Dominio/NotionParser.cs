@@ -4,14 +4,14 @@ namespace NotionMaddas.Dominio;
 
 public static class NotionParser
 {
-    public static async Task<IReadOnlyCollection<Porção>> ObterPorções()
+    public static async Task<IReadOnlyCollection<Porção>> ObterPorções(string databaseId)
     {
         var client = NotionClientFactory.Create(new ClientOptions
         {
-            AuthToken = Environment.GetEnvironmentVariable("AuthToken")
+            AuthToken = Environment.GetEnvironmentVariable("NotionAuthToken")
         });
 
-        var páginas = await client.Databases.QueryAsync(Environment.GetEnvironmentVariable("DatabaseId"),
+        var páginas = await client.Databases.QueryAsync(databaseId,
             new DatabasesQueryParameters());
 
         return páginas.Results.SelectMany(x => x.Properties)
