@@ -25,15 +25,17 @@ await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true })
 try
 {
     const string adicionarAoCarrinho = "text=Adicionar ao carrinho";
-    foreach (var item in cardápio.Itens.Where(x => x.Quantidade > 1))
+    foreach (var item in cardápio.Itens.Where(x => x.Porção.Peso != null))
     {
         await page.GotoAsync($"busca?palavra={item.Porção.Nome}");
+        await page.PauseAsync();
 
         var resultados = page.Locator(".box-produto");
 
         if (await resultados.CountAsync() == 1)
         {
             await resultados.SelecionarQuantidade(item.Quantidade);
+            await resultados.SelecionarPeso(item.Porção.Peso);
             await page.ClickAsync(adicionarAoCarrinho);
         }
         else
@@ -41,6 +43,7 @@ try
             var produto = page.Locator(".box-produto", new() { Has = page.Locator($"'{item.Porção.Nome}'") });
 
             await produto.SelecionarQuantidade(item.Quantidade);
+            await produto.SelecionarPeso(item.Porção.Peso);
             await produto.Locator(adicionarAoCarrinho).ClickAsync();
         }
 

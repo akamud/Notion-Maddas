@@ -11,11 +11,11 @@ public record Porção
     {
         Nome = Regex.Replace(nomeCompleto, padrãoPeso, "").Replace( padrãoCompartilhado, "");
         var peso = Regex.Match(nomeCompleto, padrãoPeso).Groups.Values.FirstOrDefault(x => x.GetType() == typeof(Group));
-        Peso = peso != null ? decimal.Parse(peso.Value) : null;
+        Peso = peso != null ? int.Parse(peso.Value) : null;
         Compartilhado = nomeCompleto.Contains(padrãoCompartilhado);
     }
 
     public string Nome { get; }
-    public decimal? Peso { get; }
+    public int? Peso { get; }
     public bool Compartilhado { get; }
 }
