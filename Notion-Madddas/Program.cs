@@ -14,29 +14,38 @@ ConsoleDebugger.Imprimir(cardápio);
 
 using var playwright = await Playwright.CreateAsync();
 await using var browser =
-    await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-    {
-        Headless = false, SlowMo = 1_000, Timeout = 10_000
-    });
+    await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, SlowMo = 1_000 });
 var context = await browser.NewContextAsync(new BrowserNewContextOptions { BaseURL = "https://maddas.com.br/" });
 var page = await context.NewPageAsync();
+page.SetDefaultTimeout(5_000);
+page.SetDefaultNavigationTimeout(30_000);
+await context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
 
-foreach (var item in cardápio.Itens)
+try
 {
-    await page.GotoAsync($"busca?palavra={item.Porção.Nome}");
-
-    var resultados = await page.Locator(".box-produto").CountAsync();
-
-    if (resultados == 1)
-        await page.ClickAsync("text=Adicionar ao carrinho");
-    else
+    const string adicionarAoCarrinho = "text=Adicionar ao carrinho";
+    foreach (var item in cardápio.Itens)
     {
-        // TODO: arroz branco não está achando
-        var teste = page.Locator($"'{item.Porção.Nome}'").First;
-        // await page.Locator($"'{item.Porção.Nome}'").Locator("text=Adicionar ao carrinho").ClickAsync();
-    }
+        await page.GotoAsync($"busca?palavra={item.Porção.Nome}");
 
-    await page.ClickAsync("text=Continuar comprando");
+        var resultados = await page.Locator(".box-produto").CountAsync();
+
+        if (resultados == 1)
+            await page.ClickAsync(adicionarAoCarrinho);
+        else
+        {
+            await page.Locator(".box-produto", new() { Has = page.Locator($"'{item.Porção.Nome}'") })
+                .Locator(adicionarAoCarrinho)
+                .ClickAsync();
+        }
+
+        await page.ClickAsync("text=Continuar comprando");
+    }
+}
+catch (Exception) { }
+finally
+{
+    await context.Tracing.StopAsync(new TracingStopOptions { Path = "tracing.zip" });
 }
 
 Console.ReadLine();
