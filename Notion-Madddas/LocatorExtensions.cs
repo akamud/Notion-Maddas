@@ -1,0 +1,12 @@
+using Microsoft.Playwright;
+
+namespace NotionMaddas;
+
+public static class LocatorExtensions
+{
+    public static async Task SelecionarQuantidade(this ILocator locator, int quantidade)
+    {
+        if (quantidade > 1)
+            await locator.Locator("i:has-text(\"+\")").ClickAsync(new() { ClickCount = quantidade - 1 });
+    }
+}
