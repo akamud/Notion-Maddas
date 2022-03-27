@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace NotionMaddas;
+namespace NotionMaddas.Dominio;
 
 public record Porção
 {

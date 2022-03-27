@@ -1,3 +1,5 @@
+using NotionMaddas.Dominio;
+
 namespace NotionMaddas;
 
 public record Cardápio
