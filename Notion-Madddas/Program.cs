@@ -14,7 +14,6 @@ ConsoleDebugger.Imprimir(cardápio);
 Console.WriteLine("É HORA DO SHOW");
 
 AutomatizadorCompra automatizadorCompra = new();
-await automatizadorCompra.Inicializar();
 await automatizadorCompra.ExecutarCompra(cardápio, false);
 
 Console.WriteLine("E POR HOJE É SÓ");

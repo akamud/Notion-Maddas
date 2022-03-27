@@ -4,51 +4,45 @@ namespace NotionMaddas;
 
 public class AutomatizadorCompra
 {
-    private IBrowserContext _context;
-    private IPage _page;
     private const string selectorAdicionarAoCarrinho = "text=Adicionar ao carrinho";
     private const string selectorBoxProduto = ".box-produto";
 
-    public async Task Inicializar()
+    public async Task ExecutarCompra(Cardápio cardápio, bool tracing)
     {
         using var playwright = await Playwright.CreateAsync();
         await using var browser =
-            await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-        _context = await browser.NewContextAsync(new BrowserNewContextOptions { BaseURL = "https://maddas.com.br/" });
-        _page = await _context.NewPageAsync();
-        _page.SetDefaultTimeout(5_000);
-        _page.SetDefaultNavigationTimeout(30_000);
-    }
-
-    public async Task ExecutarCompra(Cardápio cardápio, bool tracing)
-    {
+            await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {Headless = false});
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions {BaseURL = "https://maddas.com.br/"});
+        var page = await context.NewPageAsync();
+        page.SetDefaultTimeout(5_000);
+        page.SetDefaultNavigationTimeout(30_000);
         if (tracing)
-            await _context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true });
+            await context.Tracing.StartAsync(new() {Screenshots = true, Snapshots = true});
 
         try
         {
             foreach (var (porção, quantidade) in cardápio.Itens)
             {
-                await _page.GotoAsync($"busca?palavra={porção.Nome}");
+                await page.GotoAsync($"busca?palavra={porção.Nome}");
 
-                var produtosEncontrados = _page.Locator(selectorBoxProduto);
+                var produtosEncontrados = page.Locator(selectorBoxProduto);
 
                 if (await produtosEncontrados.CountAsync() == 1)
                 {
                     await produtosEncontrados.SelecionarQuantidade(quantidade);
                     await produtosEncontrados.SelecionarPeso(porção.Peso);
-                    await _page.ClickAsync(selectorAdicionarAoCarrinho);
+                    await page.ClickAsync(selectorAdicionarAoCarrinho);
                 }
                 else
                 {
-                    var produto = _page.Locator(selectorBoxProduto, new() { Has = _page.Locator($"'{porção.Nome}'") });
+                    var produto = page.Locator(selectorBoxProduto, new() {Has = page.Locator($"'{porção.Nome}'")});
 
                     await produto.SelecionarQuantidade(quantidade);
                     await produto.SelecionarPeso(porção.Peso);
                     await produto.Locator(selectorAdicionarAoCarrinho).ClickAsync();
                 }
 
-                await _page.ClickAsync("text=Continuar comprando");
+                await page.ClickAsync("text=Continuar comprando");
             }
         }
         catch (Exception e)
@@ -59,7 +53,7 @@ public class AutomatizadorCompra
         finally
         {
             if (tracing)
-                await _context.Tracing.StopAsync(new TracingStopOptions { Path = "tracing.zip" });
+                await context.Tracing.StopAsync(new TracingStopOptions {Path = "tracing.zip"});
         }
     }
 }
