@@ -1,21 +1,18 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using Notion.Client;
+﻿using Notion.Client;
+using NotionMadddas;
 
 var client = NotionClientFactory.Create(new ClientOptions
 {
     AuthToken = Environment.GetEnvironmentVariable("AuthToken")
 });
 
-var pages = await client.Databases.QueryAsync(Environment.GetEnvironmentVariable("DatabaseId"),
+var páginas = await client.Databases.QueryAsync(Environment.GetEnvironmentVariable("DatabaseId"),
     new DatabasesQueryParameters());
-// var itensCardapio = pages.Properties.Where(x => x.Key == "Cardápio Letticia" || x.Key == "Cardapio Mud")
-//     .Select(x => x.Value).OfType<MultiSelectProperty>().ToList();
-var keyValuePairs = pages.Results.SelectMany(x => x.Properties)
+var itensCardápio = páginas.Results.SelectMany(x => x.Properties)
     .Where(x => x.Key == "Cardápio Letticia" || x.Key == "Cardapio Mud")
     .Select(x => x.Value).OfType<MultiSelectPropertyValue>()
     .SelectMany(value => value.MultiSelect)
-    .Select(x => x.Name);
-
+    .Select(x => new ItemCardápio(x.Name))
+    .ToList();
 
 Console.ReadLine();
