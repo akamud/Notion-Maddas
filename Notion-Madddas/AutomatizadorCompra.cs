@@ -11,9 +11,8 @@ public class AutomatizadorCompra
 
     public async Task Inicializar()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser =
-            await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
+        var playwright = await Playwright.CreateAsync();
+        var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
         _context = await browser.NewContextAsync(new BrowserNewContextOptions { BaseURL = "https://maddas.com.br/" });
         _page = await _context.NewPageAsync();
         _page.SetDefaultTimeout(5_000);
