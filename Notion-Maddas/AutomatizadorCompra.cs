@@ -3,12 +3,12 @@ using Spectre.Console;
 
 namespace NotionMaddas;
 
-public class AutomatizadorCompra
+public static class AutomatizadorCompra
 {
     private const string selectorAdicionarAoCarrinho = "text=Adicionar ao carrinho";
     private const string selectorBoxProduto = ".box-produto";
 
-    public async Task ExecutarCompra(Cardápio cardápio, bool tracing)
+    public static async Task ExecutarCompra(Cardápio cardápio, bool tracing)
     {
         using var playwright = await Playwright.CreateAsync();
         await using var browser =

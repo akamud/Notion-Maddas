@@ -7,15 +7,14 @@ public static class ConsoleDebugger
     public static void Imprimir(Cardápio cardápio)
     {
         var table = new Table();
-        table.AddColumns("Item", "Quantidade");
+        table.AddColumns(new TableColumn("Item").Footer("Total"),
+            new TableColumn("Quantidade").Footer(cardápio.QuantidadeItens.ToString()));
 
-        foreach (var item in cardápio.Itens.OrderBy(x => x.Porção.Nome))
+        foreach (var (porção, quantidade) in cardápio.Itens.OrderBy(x => x.Porção.Nome))
         {
-            table.AddRow($"{item.Porção.Nome} {(item.Porção.Peso == null ? "" : $"({item.Porção.Peso}g)")}",
-                item.Quantidade.ToString());
+            table.AddRow($"{porção.Nome} {(porção.Peso == null ? "" : $"({porção.Peso}g)")}",
+                quantidade.ToString());
         }
-
-        table.AddRow("Total", cardápio.QuantidadeItens.ToString());
 
         AnsiConsole.Write(table);
     }

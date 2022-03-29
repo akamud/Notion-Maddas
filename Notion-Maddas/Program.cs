@@ -12,7 +12,8 @@ await AnsiConsole.Progress()
     .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(), new SpinnerColumn())
     .StartAsync(async contexto =>
     {
-        var notionTask = contexto.AddTask($"{Emoji.Known.GlobeWithMeridians} Obtendo dados do Notion").IsIndeterminate();
+        var notionTask = contexto.AddTask($"{Emoji.Known.GlobeWithMeridians} Obtendo dados do Notion")
+            .IsIndeterminate();
         var porções = await NotionParser.ObterPorções(databaseId);
         notionTask.IsIndeterminate(false);
         notionTask.Increment(100);
@@ -30,5 +31,4 @@ if (cardápio == null)
 
 ConsoleDebugger.Imprimir(cardápio);
 
-AutomatizadorCompra automatizadorCompra = new();
-await automatizadorCompra.ExecutarCompra(cardápio, tracing);
+await AutomatizadorCompra.ExecutarCompra(cardápio, tracing);
