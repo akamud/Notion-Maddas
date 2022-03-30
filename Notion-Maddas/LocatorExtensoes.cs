@@ -2,7 +2,7 @@ using Microsoft.Playwright;
 
 namespace NotionMaddas;
 
-public static class LocatorExtensions
+public static class LocatorExtensoes
 {
     public static async Task SelecionarQuantidade(this ILocator locator, int quantidade)
     {

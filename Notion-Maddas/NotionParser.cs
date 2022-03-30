@@ -1,6 +1,7 @@
 using Notion.Client;
+using NotionMaddas.Dominio;
 
-namespace NotionMaddas.Dominio;
+namespace NotionMaddas;
 
 public static class NotionParser
 {
@@ -18,7 +19,7 @@ public static class NotionParser
             .Where(x => x.Key is "Cardápio Letticia" or "Cardapio Mud")
             .Select(x => x.Value).OfType<MultiSelectPropertyValue>()
             .SelectMany(value => value.MultiSelect)
-            .Select(x => new Porção(x.Name))
+            .Select(x => Porção.Parse(x.Name))
             .ToList();
     }
 }

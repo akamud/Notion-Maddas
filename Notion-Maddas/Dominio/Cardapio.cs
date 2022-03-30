@@ -1,6 +1,4 @@
-using NotionMaddas.Dominio;
-
-namespace NotionMaddas;
+namespace NotionMaddas.Dominio;
 
 public record Cardápio
 {

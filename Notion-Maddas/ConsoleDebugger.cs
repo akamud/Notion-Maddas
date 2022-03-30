@@ -1,3 +1,4 @@
+using NotionMaddas.Dominio;
 using Spectre.Console;
 
 namespace NotionMaddas;

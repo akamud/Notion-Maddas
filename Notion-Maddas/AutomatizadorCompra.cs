@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using NotionMaddas.Dominio;
 using Spectre.Console;
 
 namespace NotionMaddas;
@@ -65,9 +66,9 @@ public static class AutomatizadorCompra
                 {
                     if (tracing)
                         await context.Tracing.StopAsync(new TracingStopOptions { Path = "tracing.zip" });
-                }
 
-                carrinhoTask.StopTask();
+                    carrinhoTask.StopTask();
+                }
             });
 
         AnsiConsole.MarkupLine($"{Emoji.Known.CreditCard} Prossiga com o pagamento");
