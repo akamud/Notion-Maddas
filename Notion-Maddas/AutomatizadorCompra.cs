@@ -1,6 +1,7 @@
 using Microsoft.Playwright;
 using NotionMaddas.Dominio;
 using Spectre.Console;
+using System.Text.RegularExpressions;
 
 namespace NotionMaddas;
 
@@ -46,7 +47,7 @@ public static class AutomatizadorCompra
                         else
                         {
                             var produto = page.Locator(selectorBoxProduto,
-                                new() { Has = page.Locator($"'{porção.Nome}'") });
+                                new() { HasTextRegex = new Regex($"^{porção.Nome.Trim()}$", RegexOptions.IgnoreCase) });
 
                             await produto.SelecionarQuantidade(quantidade);
                             await produto.SelecionarPeso(porção.Peso);
